@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { formSchema } from "./FormAddCar.form";
+import { formSchema } from "./FormEditCar.form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,38 +24,37 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { UploadButton } from "@/utils/uploadthing";
-import { FormAddCarProps } from "./FormAddCar.type";
 import { toast } from "@/components/ui/use-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { FormEditCarProps } from "./FormEditCar.type";
 
-export function FormAddCar(props: FormAddCarProps) {
-  const { setOpenDialog } = props;
+export function FormEditCar(props: FormEditCarProps) {
+  const { carData, setOpenDialog } = props;
   const [photoUploaded, setPhotoUploaded] = useState(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      cv: "",
-      transmission: "",
-      people: "",
-      photo: "",
-      priceDay: "",
-      engine: "",
-      type: "",
-      isPublish: false,
+      name: carData.name,
+      cv: carData.cv,
+      transmission: carData.transmission,
+      people: carData.people,
+      photo: carData.photo,
+      priceDay: carData.priceDay,
+      engine: carData.engine,
+      type: carData.type,
+      isPublish: carData.isPublish ? carData.isPublish : false,
     },
   });
 
-  // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setOpenDialog(false);
     try {
-      await axios.post("/api/car", values);
+      await axios.patch(`/api/car/${carData}/form`, values);
       toast({
-        title: "Car created",
+        title: "Car modified",
       });
       router.refresh();
     } catch (error) {
@@ -245,7 +244,7 @@ export function FormAddCar(props: FormAddCarProps) {
           />
         </div>
         <Button type="submit" className="w-full mt-5" disabled={!isValid}>
-          Create Car
+          Edit Car
         </Button>
       </form>
     </Form>

@@ -9,12 +9,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PlusCircle } from "lucide-react";
-import { useState } from "react";
-import { FormAddCar } from "../FormAddCar";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { Pencil } from "lucide-react";
+import { useState } from "react";
 
-export function ButtonAddCar() {
+import { ButtonEditCarProps } from "./ButtonEditCar.type";
+import { FormEditCar } from "../FormEditCar";
+
+export function ButtonEditCar(props: ButtonEditCarProps) {
+  const { carData } = props;
   const [openDialog, setOpenDialog] = useState(false);
 
   return (
@@ -24,14 +27,14 @@ export function ButtonAddCar() {
       </VisuallyHidden>
       <DialogTrigger asChild>
         <Button variant="outline" onClick={() => setOpenDialog(true)}>
-          Agregar Vehículo
-          <PlusCircle className="ml-2" />
+          Editar
+          <Pencil className="w-4 h-4 ml-2" />
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogDescription>
-            <FormAddCar setOpenDialog={setOpenDialog} />
+            <FormEditCar setOpenDialog={setOpenDialog} carData={carData} />
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
